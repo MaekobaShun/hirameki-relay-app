@@ -146,15 +146,15 @@
                 {% else %}
                 <div class="ideas-grid">
                     {% for item in inheritance_items %}
-                    <div class="idea-card inheritance-card" role="button" tabindex="0" {% if item.child_idea_id
-                        %}data-detail-url="{{ url_for('post_view', idea_id=item.child_idea_id) }}" {% endif %}>
+                    <div class="idea-card inheritance-card" role="button" tabindex="0"
+                        data-detail-url="{{ url_for('inheritance_view', inheritance_id=item.inheritance_id) }}">
                         <div class="idea-header">
                             <h4>{{ item.parent_title }}</h4>
                             <span class="idea-category">{{ item.parent_category }}</span>
                         </div>
                         {% if item.add_point %}
                         <div class="inheritance-add-info">
-                            <span class="inheritance-add-badge">✨ {{ item.add_point }}</span>
+                            <span class="inheritance-add-badge">{{ item.add_point }}</span>
                         </div>
                         {% endif %}
                         <div class="idea-footer">

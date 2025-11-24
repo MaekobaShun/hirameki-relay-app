@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>継承詳細 - ひらめきリレー</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='hub.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+    <script src="{{ url_for('static', filename='header.js') }}" defer></script>
+    <style>
+        .inheritance-view-details {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .view-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .view-content {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .view-point {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #7c3aed;
+        }
+
+        .edit-button {
+            background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 999px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .edit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <main class="form-main">
+        <section class="form-card glass-card">
+            <div class="form-top">
+                <h2 class="form-title">継承アイデア詳細</h2>
+                <div class="inheritance-status-badge" style="justify-content: center; margin-top: 0.5rem;">
+                    {% if inheritance.child_idea_id %}
+                    <span class="status-posted">投稿済み</span>
+                    {% else %}
+                    <span class="status-saved">保存済み</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- 継承元のアイデア情報 -->
+            <div class="inheritance-source">
+                <h3 class="inheritance-source-title">継承元のアイデア</h3>
+                <div class="inheritance-source-card">
+                    <div class="inheritance-source-header">
+                        <h4>{{ inheritance.parent_title }}</h4>
+                        <span class="inheritance-source-category">📁 {{ inheritance.parent_category }}</span>
+                    </div>
+                    <p class="inheritance-source-detail">{{ inheritance.parent_detail }}</p>
+                    <div class="inheritance-source-footer">
+                        <span class="inheritance-source-author">作成者: {{ inheritance.parent_nickname }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 継承内容 -->
+            <div class="inheritance-view-details">
+                <h3 class="inheritance-source-title">継承した内容</h3>
+
+                <span class="view-label">追加したポイント</span>
+                <div class="view-content view-point">
+                    {{ inheritance.add_point }}
+                </div>
+
+                {% if inheritance.add_detail %}
+                <span class="view-label">詳細</span>
+                <div class="view-content">
+                    {{ inheritance.add_detail | replace('\n', '<br>') | safe }}
+                </div>
+                {% endif %}
+
+                <div class="form-actions">
+                    {% if not inheritance.child_idea_id %}
+                    <a href="{{ url_for('inheritance_form', idea_id=inheritance.parent_idea_id) }}"
+                        class="edit-button">編集して投稿する</a>
+                    {% endif %}
+                    <a href="{{ url_for('mypage') }}" class="cancel-link">マイページに戻る</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="floating-sparkle sparkle-1">✨</div>
+    <div class="floating-sparkle sparkle-2">✨</div>
+
+    {% include 'notification_panel.html' %}
+</body>
+
+</html>

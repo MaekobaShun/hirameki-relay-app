@@ -331,7 +331,7 @@ def post_inheritance(idea_id):
         # アイデアを登録
         con.execute(
             "INSERT INTO ideas (idea_id, title, detail, category, user_id, created_at, inheritance_flag) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (child_idea_id, child_title, child_detail, child_category, user_id, created_at, True)
+            (child_idea_id, child_title, add_detail, child_category, user_id, created_at, True)
         )
 
         # 継承情報を登録
@@ -347,6 +347,56 @@ def post_inheritance(idea_id):
 
     flash('アイデアを継承して新規投稿しました。')
     return redirect(url_for('index'))
+
+@app.route('/inheritance/view/<inheritance_id>')
+@login_required
+def inheritance_view(inheritance_id):
+    user_id = session['user_id']
+    
+    with get_connection() as con:
+        row = con.execute("""
+            SELECT 
+                ii.inheritance_id,
+                ii.parent_idea_id,
+                ii.child_idea_id,
+                ii.add_point,
+                ii.add_detail,
+                ii.created_at,
+                parent_i.title as parent_title,
+                parent_i.detail as parent_detail,
+                parent_i.category as parent_category,
+                parent_u.nickname as parent_nickname,
+                child_i.title as child_title,
+                child_i.detail as child_detail,
+                child_i.category as child_category
+            FROM idea_inheritance ii
+            LEFT JOIN ideas parent_i ON ii.parent_idea_id = parent_i.idea_id
+            LEFT JOIN mypage parent_u ON ii.parent_user_id = parent_u.user_id
+            LEFT JOIN ideas child_i ON ii.child_idea_id = child_i.idea_id
+            WHERE ii.inheritance_id = ?
+        """, (inheritance_id,)).fetchone()
+        
+        if not row:
+            flash('継承情報が見つかりません。')
+            return redirect(url_for('mypage'))
+            
+        inheritance = {
+            'inheritance_id': row[0],
+            'parent_idea_id': row[1],
+            'child_idea_id': row[2],
+            'add_point': row[3],
+            'add_detail': row[4],
+            'created_at': row[5],
+            'parent_title': row[6],
+            'parent_detail': row[7],
+            'parent_category': row[8],
+            'parent_nickname': row[9] if row[9] else '不明なユーザー',
+            'child_title': row[10],
+            'child_detail': row[11],
+            'child_category': row[12]
+        }
+        
+    return render_template('inheritance_view.html', inheritance=inheritance)
 
 
 @app.route('/post', methods=['POST'])
@@ -422,7 +472,8 @@ def post_view(idea_id):
                 i.created_at,
                 i.user_id,
                 u.nickname,
-                u.icon_path
+                u.icon_path,
+                i.inheritance_flag
             FROM ideas i
             LEFT JOIN mypage u ON i.user_id = u.user_id
             WHERE i.idea_id = ?
@@ -433,6 +484,16 @@ def post_view(idea_id):
     if not row:
         flash('投稿が見つかりませんでした。')
         return redirect(url_for('mypage'))
+
+    # 継承されたアイデアの場合は継承詳細画面へリダイレクト
+    if row[8]: # inheritance_flag
+        with get_connection() as con:
+            inheritance_row = con.execute(
+                "SELECT inheritance_id FROM idea_inheritance WHERE child_idea_id = ?",
+                (idea_id,)
+            ).fetchone()
+            if inheritance_row:
+                return redirect(url_for('inheritance_view', inheritance_id=inheritance_row[0]))
 
     idea = {
         'idea_id': row[0],
