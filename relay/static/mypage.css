@@ -424,6 +424,7 @@ body {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -641,97 +642,7 @@ body {
     color: #ec4899;
 }
 
-/* 復活通知リスト */
-.revival-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
 
-.revival-item {
-    display: flex;
-    gap: 16px;
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 1.25rem;
-    border: 1px solid rgba(229, 231, 235, 0.8);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.revival-item:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 35px rgba(124, 58, 237, 0.18);
-    border-color: rgba(124, 58, 237, 0.4);
-}
-
-.revival-avatar {
-    flex-shrink: 0;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    border: 2px solid rgba(124, 58, 237, 0.35);
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.revival-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.revival-avatar__initial {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #7c3aed;
-}
-
-.revival-content {
-    flex: 1;
-}
-
-.revival-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-bottom: 8px;
-    gap: 12px;
-}
-
-.revival-header h4 {
-    font-size: 1rem;
-    color: #1f2937;
-    margin: 0;
-    flex: 1;
-}
-
-.revival-message {
-    color: #4b5563;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin: 0.75rem 0;
-}
-
-.revival-message strong {
-    color: #7c3aed;
-    font-weight: 600;
-}
-
-.revival-footer {
-    display: flex;
-    justify-content: flex-end;
-    padding-top: 0.75rem;
-    margin-top: 0.75rem;
-    border-top: 1px solid rgba(229, 231, 235, 0.8);
-}
-
-.revival-date {
-    font-size: 0.8rem;
-    color: #9ca3af;
-}
 
 /* ボタンエリア */
 .button-area {
@@ -790,7 +701,7 @@ body {
     .profile-stat__label {
         font-size: 0.80rem;
     }
-    
+
     .profile-stat__value {
         font-size: 1.2rem;
     }
@@ -920,91 +831,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 通知パネル */
-.notification-panel {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    padding: 1rem;
-}
 
-.notification-panel[aria-hidden="false"],
-.notification-panel.open {
-    opacity: 1;
-    visibility: visible;
-}
-
-.notification-panel__content {
-    background: white;
-    border-radius: 1.5rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    max-width: 600px;
-    width: 100%;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transform: scale(0.95);
-    transition: transform 0.3s ease;
-}
-
-.notification-panel.open .notification-panel__content {
-    transform: scale(1);
-}
-
-.notification-panel__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(229, 231, 235, 0.8);
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
-}
-
-.notification-panel__header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #1f2937;
-    font-weight: 700;
-}
-
-.notification-close {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    color: #6b7280;
-    cursor: pointer;
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
-    transition: background 0.25s ease, color 0.25s ease;
-}
-
-.notification-close:hover {
-    background: rgba(107, 114, 128, 0.1);
-    color: #1f2937;
-}
-
-.notification-panel__body {
-    padding: 1.5rem;
-    overflow-y: auto;
-    flex: 1;
-}
 
 /* 継承カード */
 .inheritance-card {
@@ -1049,11 +876,4 @@ body {
 .status-saved {
     background: rgba(107, 114, 128, 0.15);
     color: #6b7280;
-}
-
-@media (max-width: 768px) {
-    .notification-panel__content {
-        max-width: 100%;
-        max-height: 90vh;
-    }
 }

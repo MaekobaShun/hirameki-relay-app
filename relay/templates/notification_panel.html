@@ -1,0 +1,50 @@
+<div class="notification-panel" id="notification-panel" aria-hidden="true">
+    <div class="notification-panel__content">
+        <div class="notification-panel__header">
+            <h3>復活通知</h3>
+            <button type="button" class="notification-close" id="notification-close" aria-label="閉じる">×</button>
+        </div>
+        <div class="notification-panel__body">
+            {% if not revival_notifications %}
+            <p class="empty-message">復活通知はまだありません。</p>
+            {% else %}
+            <div class="revival-list">
+                {% for notification in revival_notifications %}
+                <div class="revival-item">
+                    <div class="revival-avatar">
+                        {% if notification.picker_icon_path %}
+                        {% if notification.picker_icon_path.startswith('uploads/') %}
+                        <img src="{{ url_for('uploaded_file', filename=notification.picker_icon_path[8:]) }}"
+                            alt="{{ notification.picker_nickname }}のアイコン">
+                        {% elif notification.picker_icon_path.startswith('http') %}
+                        <img src="{{ notification.picker_icon_path }}" alt="{{ notification.picker_nickname }}のアイコン">
+                        {% else %}
+                        <img src="{{ url_for('static', filename=notification.picker_icon_path) }}"
+                            alt="{{ notification.picker_nickname }}のアイコン">
+                        {% endif %}
+                        {% else %}
+                        <span class="revival-avatar__initial">{{ notification.picker_nickname[0] if
+                            notification.picker_nickname and notification.picker_nickname != '不明なユーザー' else
+                            notification.picker_id[0] }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="revival-content">
+                        <div class="revival-header">
+                            <h4>{{ notification.idea_title }}</h4>
+                            <span class="idea-category">{{ notification.category }}</span>
+                        </div>
+                        <p class="revival-message">
+                            <strong>{{ notification.picker_nickname }}</strong> さんによって「{{ notification.idea_title
+                            }}」が復活しました。
+                        </p>
+                        <div class="revival-footer">
+                            <span class="revival-date">{{ notification.created_at }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

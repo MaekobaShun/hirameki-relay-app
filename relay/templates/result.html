@@ -1,79 +1,61 @@
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ガチャ結果 - ひらめきリレー</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='hub.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='result.css') }}">
-        <script src="{{ url_for('static', filename='header.js') }}" defer></script>
-    </head>
-    <body>
-        <header class="header">
-            <div class="header-content">
-                <div class="header-left">
-                    <div class="logo-icon">💡</div>
-                    <h1 class="logo-text">ひらめきリレー</h1>
-                </div>
-                <div class="header-right">
-                    <a href="{{ url_for('mypage') }}" class="notification-bell" aria-label="通知を開く">
-                        <span class="bell-icon">🔔</span>
-                    </a>
-                    <button class="menu-toggle" type="button" aria-label="メニューを開く" aria-expanded="false">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                    <nav class="mypage-nav">
-                        <a href="{{ url_for('index') }}">ホーム</a>
-                        <a href="{{ url_for('form') }}">投稿</a>
-                        <a href="{{ url_for('gacha') }}" class="active">ガチャ</a>
-                        <a href="{{ url_for('mypage') }}">マイページ</a>
-                    </nav>
-                </div>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ガチャ結果 - ひらめきリレー</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='hub.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='result.css') }}">
+    <script src="{{ url_for('static', filename='header.js') }}" defer></script>
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <main class="result-main">
+        <section class="result-wrapper">
+            <div class="result-icon">🎉</div>
+            <h2 class="result-title">ガチャ結果</h2>
+
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="result-flash">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
             </div>
-        </header>
+            {% endif %}
+            {% endwith %}
 
-        <main class="result-main">
-            <section class="result-wrapper">
-                <div class="result-icon">🎉</div>
-                <h2 class="result-title">ガチャ結果</h2>
+            {% if item %}
+            <article class="result-card">
+                <h3 class="result-card__title">{{ item[1] }}</h3>
+                <p class="result-card__detail">{{ item[2] }}</p>
+                <span class="result-card__category">📁 {{ item[3] }}</span>
+            </article>
+            {% else %}
+            <div class="result-card">
+                <p class="result-empty">データがありません。</p>
+            </div>
+            {% endif %}
 
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        <div class="result-flash">
-                            {% for message in messages %}
-                                <p>{{ message }}</p>
-                            {% endfor %}
-                        </div>
+            <div class="result-actions">
+                <form action="{{ url_for('spin') }}" method="get" class="result-action-form">
+                    {% if request.args.get('category') %}
+                    <input type="hidden" name="category" value="{{ request.args.get('category') }}">
                     {% endif %}
-                {% endwith %}
+                    <button type="submit" class="result-button secondary">もう一度回す</button>
+                </form>
+                <a href="{{ url_for('gacha') }}" class="result-button">カテゴリ選択画面に戻る</a>
+            </div>
+        </section>
+    </main>
 
-                {% if item %}
-                    <article class="result-card">
-                        <h3 class="result-card__title">{{ item[1] }}</h3>
-                        <p class="result-card__detail">{{ item[2] }}</p>
-                        <span class="result-card__category">📁 {{ item[3] }}</span>
-                    </article>
-                {% else %}
-                    <div class="result-card">
-                        <p class="result-empty">データがありません。</p>
-                    </div>
-                {% endif %}
+    <div class="floating-sparkle sparkle-1">✨</div>
+    <div class="floating-sparkle sparkle-2">✨</div>
 
-                <div class="result-actions">
-                    <form action="{{ url_for('spin') }}" method="get" class="result-action-form">
-                        {% if request.args.get('category') %}
-                            <input type="hidden" name="category" value="{{ request.args.get('category') }}">
-                        {% endif %}
-                        <button type="submit" class="result-button secondary">もう一度回す</button>
-                    </form>
-                    <a href="{{ url_for('gacha') }}" class="result-button">カテゴリ選択画面に戻る</a>
-                </div>
-            </section>
-        </main>
+    {% include 'notification_panel.html' %}
+</body>
 
-        <div class="floating-sparkle sparkle-1">✨</div>
-        <div class="floating-sparkle sparkle-2">✨</div>
-    </body>
 </html>

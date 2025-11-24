@@ -1,0 +1,29 @@
+<header class="header">
+    <div class="header-content">
+        <div class="header-left">
+            <div class="logo-icon">💡</div>
+            <h1 class="logo-text">ひらめきリレー</h1>
+        </div>
+        <div class="header-right">
+            <button class="notification-bell" type="button" aria-label="通知を開く" aria-expanded="false"
+                id="notification-bell">
+                <span class="bell-icon">🔔</span>
+                {% if revival_notifications and revival_notifications|length > 0 %}
+                <span class="notification-badge">{{ revival_notifications|length }}</span>
+                {% endif %}
+            </button>
+            <button class="menu-toggle" type="button" aria-label="メニューを開く" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="mypage-nav">
+                <a href="{{ url_for('index') }}" {% if request.endpoint=='index' %}class="active" {% endif %}>ホーム</a>
+                <a href="{{ url_for('form') }}" {% if request.endpoint=='form' %}class="active" {% endif %}>投稿</a>
+                <a href="{{ url_for('gacha') }}" {% if request.endpoint=='gacha' %}class="active" {% endif %}>ガチャ</a>
+                <a href="{{ url_for('mypage') }}" {% if request.endpoint=='mypage' %}class="active" {% endif
+                    %}>マイページ</a>
+            </nav>
+        </div>
+    </div>
+</header>

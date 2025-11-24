@@ -37,6 +37,46 @@
                 closeMenu();
             }
         });
+        const notificationBell = document.getElementById('notification-bell');
+        const notificationPanel = document.getElementById('notification-panel');
+        const notificationClose = document.getElementById('notification-close');
+
+        if (notificationBell && notificationPanel) {
+            const openNotificationPanel = (e) => {
+                e.preventDefault();
+                notificationPanel.classList.add('open');
+                notificationPanel.setAttribute('aria-hidden', 'false');
+                notificationBell.setAttribute('aria-expanded', 'true');
+            };
+
+            const closeNotificationPanel = () => {
+                notificationPanel.classList.remove('open');
+                notificationPanel.setAttribute('aria-hidden', 'true');
+                notificationBell.setAttribute('aria-expanded', 'false');
+            };
+
+            notificationBell.addEventListener('click', openNotificationPanel);
+
+            if (notificationClose) {
+                notificationClose.addEventListener('click', closeNotificationPanel);
+            }
+
+            // Close when clicking outside
+            document.addEventListener('click', (event) => {
+                if (notificationPanel.classList.contains('open') && 
+                    !notificationPanel.contains(event.target) && 
+                    !notificationBell.contains(event.target)) {
+                    closeNotificationPanel();
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && notificationPanel.classList.contains('open')) {
+                    closeNotificationPanel();
+                }
+            });
+        }
     }
 
     if (document.readyState === 'loading') {

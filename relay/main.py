@@ -33,6 +33,44 @@ MAX_TITLE_LENGTH = 60
 MAX_POST_LENGTH = 280
 
 
+@app.context_processor
+def inject_notifications():
+    if 'user_id' not in session:
+        return dict(revival_notifications=[])
+    
+    user_id = session['user_id']
+    with get_connection() as con:
+        revival_rows = con.execute("""
+            SELECT 
+                rn.notify_id,
+                rn.created_at,
+                rn.picker_id,
+                picker.nickname,
+                picker.icon_path,
+                i.title,
+                i.category
+            FROM revival_notify rn
+            JOIN ideas i ON rn.idea_id = i.idea_id
+            LEFT JOIN mypage picker ON rn.picker_id = picker.user_id
+            WHERE rn.author_id = ?
+            ORDER BY rn.created_at DESC
+        """, (user_id,)).fetchall()
+
+    revival_notifications = []
+    for row in revival_rows:
+        revival_notifications.append({
+            'notify_id': row[0],
+            'created_at': row[1],
+            'picker_id': row[2],
+            'picker_nickname': row[3] if row[3] else '不明なユーザー',
+            'picker_icon_path': row[4],
+            'idea_title': row[5],
+            'category': row[6]
+        })
+    
+    return dict(revival_notifications=revival_notifications)
+
+
 def calculate_text_length(text):
     length = 0
     for ch in text:
